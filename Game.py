@@ -23,7 +23,6 @@ class Game:
         self._run()
     
     def _run(self):
-        print("Starting game...")
         while self.running:
             self._draw()
             self._manage_events()
@@ -35,13 +34,13 @@ class Game:
             if event.type == pygame.QUIT:
                 self._quit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
+                if event.key == pygame.K_UP and self.snakes[0].get_direction() != 2:
                     self.snakes[0].set_direction(0)
-                if event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_RIGHT and self.snakes[0].get_direction() != 3:
                     self.snakes[0].set_direction(1)
-                if event.key == pygame.K_DOWN:
+                if event.key == pygame.K_DOWN and self.snakes[0].get_direction() != 0:
                     self.snakes[0].set_direction(2)
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT and self.snakes[0].get_direction() != 1:
                     self.snakes[0].set_direction(3)
 
     def _quit(self):
