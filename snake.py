@@ -14,7 +14,7 @@ class Snake:
     
     def is_next_move_valid(self):
         next_move = self.get_next_move()
-        if self._is_out_of_bounds(next_move):
+        if self._is_out_of_bounds(next_move) or self._is_colliding_with_self(next_move):
             return False
         
     def get_next_move(self):
@@ -32,6 +32,13 @@ class Snake:
     def _is_out_of_bounds(self, next_move):
         if next_move[0] < 0 or next_move[0] >= 40 or next_move[1] < 0 or next_move[1] >= 40:
             return True
+
+    def _is_colliding_with_self(self, next_move):
+        for cell in self.body[2:]:
+            [x,y] = cell.get_pos()
+            if(x == next_move[0] and y == next_move[1]):
+                return True
+        return False
     
 
     def move(self, cell):

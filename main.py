@@ -1,4 +1,4 @@
-from Game import Game
+from game import Game
 
 def main():
     game = Game([40,40], [800,800])
