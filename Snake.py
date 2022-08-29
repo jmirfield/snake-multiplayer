@@ -2,8 +2,10 @@ import random
 import pygame
 
 class Snake:
-    def __init__(self,head):
+    def __init__(self, head, width, height):
         self.head = head
+        self.width = width
+        self.height = height
         self.body = [self.head, self.head]
         self.direction = random.randint(0,3)
 
@@ -40,10 +42,13 @@ class Snake:
     def draw(self, screen):
         for cell in self.body:
             [x,y] = cell.get_pos()
-            screen.fill((255,255,255), (x*20,y*20,20,20))
+            screen.fill((255,255,255), (x*self.width,y*self.height,self.width,self.height))
 
     def grow(self):
         self.body.append(self.head)
 
     def set_direction(self, direction):
         self.direction = direction
+
+    def get_direction(self):
+        return self.direction

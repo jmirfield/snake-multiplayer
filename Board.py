@@ -1,15 +1,14 @@
-from Cell import Cell
+from cell import Cell
 
 class Board:
     def __init__(self, size, snakes):
-        print("Building board...")
         self.rows = size[0]
         self.cols = size[1]
         self.board = [[0 for x in range(self.cols)] for y in range(self.rows)]
         self.snakes = snakes
-        self.setup_board()
+        self._setup_board()
     
-    def setup_board(self):
+    def _setup_board(self):
         for x in range(self.cols):
             for y in range(self.rows):
                 self.board[x][y] = Cell(x,y,"EMPTY")
