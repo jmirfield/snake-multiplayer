@@ -13,7 +13,7 @@ class Game:
         self.grid = grid
         self.grid_width = screen[0]/grid[0]
         self.grid_height = screen[1]/grid[1]
-        self.events = pygame.event
+        self.events = pygame.event.get()
         self.clock = pygame.time.Clock()
         self.snakes = [Snake(Cell(20,22,"SNAKE"), self.grid_width, self.grid_height)]
         self.board = Board(grid, self.snakes)
@@ -23,25 +23,51 @@ class Game:
         self._run()
     
     def _run(self):
+        animation = 0
         while self.running:
+            self.clock.tick(10)
             self._draw()
             self._manage_events()
             self._update()
         pygame.quit()
 
+    def _draw(self):
+        self.screen.fill((0,0,0))
+        for snake in self.snakes:
+            snake.draw(self.screen)
+        if self.food != None:
+            self.food.draw(self.screen)
+        self.display.update()
+        
     def _manage_events(self):
-        for event in self.events.get():
-            if event.type == pygame.QUIT:
+        self.events = self.events + pygame.event.get()
+        while self.events:
+            if self.events[0].type == pygame.QUIT:
                 self._quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP and self.snakes[0].get_direction() != 2:
+                break
+            elif self.events[0].type == pygame.KEYDOWN:
+                if self.events[0].key == pygame.K_UP and self.snakes[0].get_direction() != 2:
+                    self.events.pop(0)
                     self.snakes[0].set_direction(0)
-                if event.key == pygame.K_RIGHT and self.snakes[0].get_direction() != 3:
+                    break
+                elif self.events[0].key == pygame.K_RIGHT and self.snakes[0].get_direction() != 3:
+                    self.events.pop(0)
                     self.snakes[0].set_direction(1)
-                if event.key == pygame.K_DOWN and self.snakes[0].get_direction() != 0:
+                    break
+                elif self.events[0].key == pygame.K_DOWN and self.snakes[0].get_direction() != 0:
+                    self.events.pop(0)
                     self.snakes[0].set_direction(2)
-                if event.key == pygame.K_LEFT and self.snakes[0].get_direction() != 1:
+                    break
+                elif self.events[0].key == pygame.K_LEFT and self.snakes[0].get_direction() != 1:
+                    self.events.pop(0)
                     self.snakes[0].set_direction(3)
+                    break
+                else:
+                    self.events.pop(0)
+                    continue
+            else:
+                self.events.pop(0)
+                continue
 
     def _quit(self):
         self.running = False
@@ -50,7 +76,6 @@ class Game:
         self._snake_handler()
         self._food_handler()
         # self.board.update()
-        self.clock.tick(10)
     
     def _snake_handler(self):
         for snake in self.snakes:
@@ -78,11 +103,4 @@ class Game:
             self.foodSpawned = True
     
 
-    def _draw(self):
-        self.screen.fill((0,0,0))
-        for snake in self.snakes:
-            snake.draw(self.screen)
-        if self.food != None:
-            self.food.draw(self.screen)
-        self.display.update()
 
