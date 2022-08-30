@@ -23,7 +23,6 @@ class Game:
         self._run()
     
     def _run(self):
-        animation = 0
         while self.running:
             self.clock.tick(10)
             self._draw()
