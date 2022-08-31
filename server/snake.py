@@ -3,7 +3,7 @@ import random
 class Snake:
     def __init__(self, head, id):
         self.head = head
-        self.body = [self.head, self.head, self.head]
+        self.body = [self.head, self.head, self.head, self.head, self.head, self.head, self.head, self.head, self.head, self.head, self.head, self.head, self.head, self.head, self.head,self.head, self.head, self.head]
         self.id = id
         self.direction = random.randint(0,3)
         self.status = "ALIVE"
