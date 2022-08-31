@@ -1,4 +1,5 @@
 import random
+import numpy as np
 from time import sleep
 from snake import Snake
 from cell import Cell
@@ -10,7 +11,7 @@ class Game:
         self.events = {}
         self.events["p1"] = []
         self.events["p2"] = []
-        self.snakes = [Snake(Cell([10,10],"SNAKE"), "p1"), Snake(Cell([30,30],"SNAKE"), "p2")]
+        self.snakes = [Snake(Cell([10,10],"SNAKE"), "p1", 1), Snake(Cell([30,10],"SNAKE"), "p2",3)]
         self.grid = grid
         self.board = Board(self.grid, self.snakes)
         self.running = True
@@ -40,7 +41,8 @@ class Game:
             self.update()
             self.server.broadcast(self.get_serialized_snakes())
             self.server.broadcast(self.get_serialized_food())
-            sleep(2)
+            sleep(.1)
+        self.determine_outcome()
     
     def update(self):
         self.player_events_handler()
@@ -79,18 +81,22 @@ class Game:
     def snake_handler(self):
         for snake in self.snakes:
             if snake.is_next_move_valid() == False:
+                snake.set_status("DEAD")
                 self.running = False
+                return
             cell = self.board.get_cell(snake.get_next_move())
-            if self.is_snake_eating(cell):
-                snake.grow()
+            self.snake_move_handler(snake, cell)
             prev_cell = snake.move(cell.set_type("SNAKE"))
             prev_cell.set_type("EMPTY")
     
-    def is_snake_eating(self, cell):
+    def snake_move_handler(self, snake, cell):
         if cell.get_type() == "FOOD":
+            snake.grow()
             self.foodSpawned = False
             self.food = None
-            return True
+        if cell.get_type() == "SNAKE":
+            snake.set_status("DEAD")
+            self.running = False
     
     def food_handler(self):
         if self.foodSpawned == False:
@@ -103,4 +109,25 @@ class Game:
     
     def add_event(self, id, event):
         self.events[id].append(event)
-        print(self.events)
+    
+    def determine_outcome(self):
+        final_head_pos = {}
+        final_neck_pos = {}
+        i = 0
+        for snake in self.snakes:
+            final_head_pos[i] = np.array(snake.get_body()[0].get_pos())
+            final_neck_pos[i] = np.array(snake.get_body()[1].get_pos())
+            i += 1
+        for n in range(len(final_head_pos) - 1):
+            equal = (final_head_pos[n] == final_head_pos[n+1]).all()
+            equal1 = (final_head_pos[n] == final_neck_pos[n+1]).all()
+            equal2 = (final_head_pos[n+1] == final_neck_pos[n]).all()
+            if equal or (equal1 and equal2):
+                print("DRAW!!!")
+                return
+        for snake in self.snakes:
+            if snake.get_status() == "DEAD":
+                print(f"{snake.get_id()} has lost!")
+                return
+        
+        

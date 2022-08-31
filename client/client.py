@@ -20,7 +20,7 @@ class Client:
     def run(self):
         while self.running:
             self.manage_events()
-        pygame.quit()
+        self.quit()
         self.server.close_connection()
     
     def manage_events(self):
@@ -65,3 +65,7 @@ class Client:
 
     def set(self, id):
         self.id = id
+    
+    def quit(self):
+        self.running = False
+        pygame.quit()

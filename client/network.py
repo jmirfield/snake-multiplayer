@@ -16,6 +16,7 @@ class Network:
             threading.Thread(target=self.threaded_listener).start()
         except:
             print("Error with connection")
+            self.client.quit()
             pass
     
     def threaded_listener(self):
@@ -31,5 +32,6 @@ class Network:
             print(e)
     
     def close_connection(self):
+        self.client.quit()
         self.sock.close()
 

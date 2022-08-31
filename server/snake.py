@@ -1,11 +1,13 @@
 import random
 
 class Snake:
-    def __init__(self, head, id):
+    def __init__(self, head, id, dir):
         self.head = head
         self.body = [self.head, self.head, self.head, self.head, self.head]
         self.id = id
-        self.direction = random.randint(0,3)
+        # self.direction = random.randint(0,3)
+        self.direction = dir
+        self.status = "ALIVE"
 
     def get_id(self):
         return self.id
@@ -62,3 +64,9 @@ class Snake:
 
     def get_direction(self):
         return self.direction
+    
+    def set_status(self, status):
+        self.status = status
+    
+    def get_status(self):
+        return self.status
