@@ -11,7 +11,7 @@ class Game:
         self.events = {}
         self.events["p1"] = []
         self.events["p2"] = []
-        self.snakes = [Snake(Cell([10,10],"SNAKE"), "p1", 1), Snake(Cell([30,10],"SNAKE"), "p2",3)]
+        self.snakes = [Snake(Cell([10,10],"SNAKE"), "p1"), Snake(Cell([30,30],"SNAKE"), "p2")]
         self.grid = grid
         self.board = Board(self.grid, self.snakes)
         self.running = True
