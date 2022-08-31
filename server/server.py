@@ -12,6 +12,7 @@ class ThreadedServer:
         self.sock.bind((self.host, self.port))
         self.connections = {}
         self.playerCount = 0
+        self.game = Game(self, [40,40])
 
     def listen(self):
         self.sock.listen(2)
@@ -20,7 +21,7 @@ class ThreadedServer:
             self.playerCount += 1
             threading.Thread(target = self.threaded_client, args = (client,address, f"p{self.playerCount}")).start()
             if len(self.connections) >= 2:
-                self.game = Game(self, [40,40])
+                self.game.start()
 
     def threaded_client(self, client, address, id):
         self.connections[id] = client
@@ -28,6 +29,8 @@ class ThreadedServer:
         while True:
             try:
                 data = client.recv(2048).decode()
+                if data == "79" or data == "80" or data == "81" or data== "82":
+                    self.game.add_event(id, data)
                 if data == 'shutdown':
                     client.send(str.encode('success'))
                     os._exit(0)

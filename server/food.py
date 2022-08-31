@@ -1,9 +1,10 @@
 class Food:
-    def __init__(self, cell, width, height):
+    def __init__(self, cell, id):
         self.cell = cell
-        self.width = width
-        self.height = height
+        self.id = id
 
-    def draw(self, screen):
+    def get_serialized_pos(self):
+        pos = ""
         [x,y] = self.cell.get_pos()
-        screen.fill((255,255,255), (x*self.width,y*self.height,self.width,self.height))
+        pos += f"{x},{y}"
+        return self.id+pos

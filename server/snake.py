@@ -3,26 +3,34 @@ import random
 class Snake:
     def __init__(self, head, id):
         self.head = head
-        self.body = [self.head, self.head]
+        self.body = [self.head, self.head, self.head, self.head, self.head]
         self.id = id
         self.direction = random.randint(0,3)
 
-    def get_pos_as_string(self):
+    def get_id(self):
+        return self.id
+
+    def get_serialized_pos(self):
         pos = ""
         for cell in self.body:
             if pos: pos += " "
             [x,y] = cell.get_pos()
             pos += f"{x},{y}"
-        return pos
-
+        return self.id+pos
+    
     def get_body(self):
         return self.body
     
+    def move(self, cell):
+        self.head = cell
+        self.body.insert(0, self.head)
+        return self.body.pop()
+    
     def is_next_move_valid(self):
         next_move = self.get_next_move()
-        if self._is_out_of_bounds(next_move) or self._is_colliding_with_self(next_move):
+        if self.is_out_of_bounds(next_move) or self.is_colliding_with_self(next_move):
             return False
-        
+    
     def get_next_move(self):
         [x,y] = self.head.get_pos()
         match self.direction:
@@ -34,29 +42,18 @@ class Snake:
                 return [x,y+1]
             case 3:
                 return [x-1,y]
-                
-    def _is_out_of_bounds(self, next_move):
+    
+    def is_out_of_bounds(self, next_move):
         if next_move[0] < 0 or next_move[0] >= 40 or next_move[1] < 0 or next_move[1] >= 40:
             return True
 
-    def _is_colliding_with_self(self, next_move):
+    def is_colliding_with_self(self, next_move):
         for cell in self.body[2:]:
             [x,y] = cell.get_pos()
             if(x == next_move[0] and y == next_move[1]):
                 return True
         return False
     
-
-    def move(self, cell):
-        self.head = cell
-        self.body.insert(0, self.head)
-        return self.body.pop()
-
-    def draw(self, screen):
-        for cell in self.body:
-            [x,y] = cell.get_pos()
-            screen.fill((255,255,255), (x*self.width,y*self.height,self.width,self.height))
-
     def grow(self):
         self.body.append(self.head)
 

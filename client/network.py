@@ -27,7 +27,6 @@ class Network:
     def send(self, data):
         try:
             self.sock.send(str.encode(data))
-            print(self.sock.recv(2048).decode())
         except socket.error as e:
             print(e)
     
